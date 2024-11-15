@@ -5,8 +5,10 @@
         <button (click)="openDialog()" pButton type="button" label="Nueva Tarea" icon="pi pi-plus" class="btn btn-primary"></button>
     </div>
 
+<!-- Tabla de tareas-->
+
     <div class="table-responsive">
-        <p-table (value)="tareas" class="table table-striped table-hover">
+        <p-table [value]="tareas" class="table table-striped table-hover">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Tarea</th>
@@ -23,13 +25,14 @@
                     <td>{{tarea.descripcion}}</td>
                     <td class="text-center">
                         <button pButton type="button"
-                        [label]="tarea.Completada ? 'Si' : 'No'"
+                        (click)="finishTarea(tarea)"
+                        [label]="tarea.completada ? 'Si' : 'No'"
                         [class]="tarea.completada ? 'btn btn-success' : 'btn btn-secondary'"></button>
                     </td>
-                    <td class="text-center">{{tarea.usuarioo?.nombres || 'Sin Asignar'}}</td>
+                    <td class="text-center">{{tarea.usuarioo?.nombre || 'Sin Asignar'}}</td>
                     <td class="text-center">
-                        <button pButton type="button" icon="pi pi-pencil" class="btn btn-warning me-2"></button>
-                        <button pButton type="button" icon="pi pi-trash" class="btn btn-danger"></button>
+                        <button (click)="openDialog(tarea)" pButton type="button" icon="pi pi-pencil" class="btn btn-sm btn-warning me-2" label="Editar"></button>
+                        <button (click)="deleteTarea(tarea.idTarea)" pButton type="button" icon="pi pi-trash" class="btn btn-sm btn-danger" label="Eliminar"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -38,9 +41,9 @@
 </div>
 
 <p-dialog header="Tareas" [(visible)]="displayDialog" [modal]="true" 
-[closable]="true" [style]="{width: '400px'}">
+[closable]="true" [style]="{width: '400px', height: '400px'}" [contentStyle]="{'overflow': 'visible'}">
 
-<form [formGroup]="tareaForm">
+<form [formGroup]="tareaForm" (ngSubmit) ="saveTarea()">
     <div class="mb-3">
         <label for="tarea" class="form-label">Tarea</label>
         <input id="tarea" pInputText formControlName="tarea" class="form-control">
@@ -49,19 +52,19 @@
         <label for="descripcion" class="form-label">Descripción</label>
         <input id="descripcion" pInputText formControlName="descripcion" class="form-control">
     </div>
-    <div class="mb-3">
+    <div [hidden]="isEditing" class="mb-3">
         <label for="usuario" class="form-label me-2">Usuario</label>
         <p-dropdown
         id="usuario"
         [options]="usuarios"
-        optionLabel="nombres"
+        optionLabel="nombre"
         formControlName="usuarioo"
         placeholder="Selecciona un usuario"
         ></p-dropdown>
     </div>
     <div class="d-flex justify-content-end">
         <button (click)="displayDialog = false" pButton type="button" label="Cancelar" class="btn btn-secondary me-2"></button>
-        <button pButton type="button" label="Guardar" class="btn btn-primary"></button>
+        <button pButton type="submit" label="Guardar" class="btn btn-primary" [disabled]="!tareaForm.valid"></button>
     </div>
 </form>
 

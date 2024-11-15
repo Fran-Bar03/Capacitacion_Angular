@@ -8,6 +8,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button'; 
 import { TareaService } from '../../services/tarea/tarea.service';
 import { TareaModel } from '../../models/tarea/tarea.model';
+import { UserModel } from '../../models/user/user.model';
+import { UsuarioService } from '../../services/usuario/usuario.service';
 @Component({
   selector: 'app-tarea-list',
   standalone: true,
@@ -34,9 +36,10 @@ export class TareaListComponent {
   tareas: TareaModel[] = [];
   displayDialog: boolean = false;
   tareaForm!: FormGroup;
-  usuarios: any[] = [];
+  usuarios: UserModel[] = [];
+  isEditing : boolean = false;
 
-  constructor(private fb: FormBuilder, private tareaService: TareaService) {}
+  constructor(private fb: FormBuilder, private tareaService: TareaService, private usuarioService: UsuarioService) {}
 
   ngOnInit() {
     this.tareaForm = this.fb.group({
@@ -48,6 +51,7 @@ export class TareaListComponent {
     });
 
     this.loadTareas();
+    this.loadUsuarios();
   }
 
   loadTareas() {
@@ -58,7 +62,73 @@ export class TareaListComponent {
     });
   }
 
-  openDialog()  {
+  loadUsuarios(){
+    console.log("Metodo loadtareas uwu");
+    this.usuarioService.getUsuarios().subscribe((data) => {
+      this.usuarios = data;
+      console.log(this.usuarios);
+  }
+)};
+
+  openDialog(tarea?: any)  {
     this.displayDialog = true;
+    this.isEditing = tarea;
+    if(tarea){
+      this.tareaForm.patchValue(tarea);
+    } else{
+      this.tareaForm.reset();
+    }
+  }
+
+saveTarea() { 
+
+  if(this.tareaForm.valid) {
+    const tareeData = this.tareaForm.value;
+
+    if(this.isEditing) {
+      this.updateTarea(tareeData);
+    } else {
+      this.createTarea(tareeData);
+    }
+  }
+}
+
+  createTarea(tareeData:any){
+    this.tareaService.createTareas({
+      tarea: tareeData.tarea,
+      descripcion : tareeData.descripcion,
+      idUsuario : tareeData.usuarioo?.idUsuario
+    }).subscribe(()=> {
+      this.loadTareas();
+      this.displayDialog = false;
+    })
+  }
+
+
+
+  updateTarea(tareaData: any) {
+    this.tareaService.updateTareas(tareaData.idTarea, {
+      tarea : tareaData.tarea,
+      descripcion: tareaData.descripcion,
+    }).subscribe(() => {
+      this.loadTareas();
+      this.displayDialog = false;
+    });
+  }
+
+
+deleteTarea(id: number) {
+  this.tareaService.deleteTarea(id).subscribe(()=> {
+    this.loadTareas();
+  });
+}
+  
+
+
+  finishTarea(tarea: any){
+    tarea.completada = !tarea.completada;
+    this.tareaService.finishTarea(tarea.idTarea).subscribe(()=> {
+      this.loadTareas();
+    });
   }
 }
