@@ -9,7 +9,7 @@ import { UpdateTareaModel } from '../../models/tarea/updatetareamodel';
   providedIn: 'root'
 })
 export class TareaService {
-  private apiUrl = 'https://localhost:44388/api/Tarea';
+  private apiUrl = 'https://localhost:44396/api/Tarea';
 
   constructor(private http: HttpClient) {}
 

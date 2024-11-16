@@ -55,7 +55,7 @@ export class TareaListComponent {
   }
 
   loadTareas() {
-    console.log("Metodo loadtareas uwu");
+    console.log("Metodo loadtareas ");
     this.tareaService.getTareas().subscribe((data) => {
       this.tareas = data;
       console.log(this.tareas);
@@ -63,14 +63,14 @@ export class TareaListComponent {
   }
 
   loadUsuarios(){
-    console.log("Metodo loadtareas uwu");
+    console.log("Metodo loadtareas ");
     this.usuarioService.getUsuarios().subscribe((data) => {
       this.usuarios = data;
       console.log(this.usuarios);
   }
 )};
 
-  openDialog(tarea?: any)  {
+  openDialog(tarea ?: any)  {
     this.displayDialog = true;
     this.isEditing = tarea;
     if(tarea){
@@ -122,7 +122,7 @@ deleteTarea(id: number) {
     this.loadTareas();
   });
 }
-  
+
 
 
   finishTarea(tarea: any){

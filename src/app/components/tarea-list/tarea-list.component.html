@@ -21,13 +21,13 @@
 
             <ng-template pTemplate="body" let-tarea>
                 <tr [@fadeInOut]>
-                    <td>{{tarea.tarea}}</td>
-                    <td>{{tarea.descripcion}}</td>
+                   <td>{{tarea.tarea}}</td> 
+                    <td>{{tarea.descripcion}}</td> 
                     <td class="text-center">
                         <button pButton type="button"
                         (click)="finishTarea(tarea)"
                         [label]="tarea.completada ? 'Si' : 'No'"
-                        [class]="tarea.completada ? 'btn btn-success' : 'btn btn-secondary'"></button>
+                        [class]="tarea.completada ? 'btn btn-success' : 'btn btn-secondary'"></button> 
                     </td>
                     <td class="text-center">{{tarea.usuarioo?.nombre || 'Sin Asignar'}}</td>
                     <td class="text-center">
